@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор стоимости - Строительная компания</title>
+    <link rel="stylesheet" href="Css/styles.css"> 
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="media/logo.png" alt="Логотип компании">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="calculator.html">Калькулятор стоимости</a></li>
+                <li><a href="services.html">Услуги</a></li>
+                <li><a href="about.html">О нас</a></li>
+                <li><a href="contact.html">Контакты</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Калькулятор стоимости строительства</h1>
+        <form id="calculator-form">
+            <div class="form-group">
+                <label for="area">Площадь (кв. м.):</label>
+                <input type="number" id="area" name="area" required>
+            </div>
+
+            <div class="form-group">
+                <label for="floors">Количество этажей:</label>
+                <input type="number" id="floors" name="floors" required>
+            </div>
+
+            <div class="form-group">
+                <label for="foundation">Тип фундамента:</label>
+                <select id="foundation" name="foundation" required>
+                    <option value="ленточный">Ленточный</option>
+                    <option value="плитный">Плитный</option>
+                    <option value="столбчатый">Столбчатый</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="walls">Материал стен:</label>
+                <select id="walls" name="walls" required>
+                    <option value="кирпич">Кирпич</option>
+                    <option value="дерево">Дерево</option>
+                    <option value="газобетон">Газобетон</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="roof">Тип крыши:</label>
+                <select id="roof" name="roof" required>
+                    <option value="плоская">Плоская</option>
+                    <option value="скатная">Скатная</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Дополнительные опции:</label>
+                <div>
+                    <input type="checkbox" id="balcony" name="options" value="балкон"> <label for="balcony">Балкон</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="terrace" name="options" value="терраса"> <label for="terrace">Терраса</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="garage" name="options" value="гараж"> <label for="garage">Гараж</label>
+                </div>
+            </div>
+
+            <button type="submit" class="button">Рассчитать стоимость</button>
+        </form>
+
+        <div id="result" class="result"></div>
+
+        <form id="email-form" style="display:none;">
+            <h2>Отправить расчет на email</h2>
+            <div class="form-group">
+                <label for="email">Ваш email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <button type="submit" class="button">Отправить</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Строительная компания. Все права защищены.</p>
+    </footer>
+
+    <script>
+        document.getElementById('calculator-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const area = parseFloat(document.getElementById('area').value);
+            const floors = parseFloat(document.getElementById('floors').value);
+            const foundation = document.getElementById('foundation').value;
+            const walls = document.getElementById('walls').value;
+            const roof = document.getElementById('roof').value;
+            
+            // Расчет стоимости
+            const foundationCost = 1000; // Примерная стоимость фундамента
+            const wallCost = area * 500; // Примерная стоимость стен
+            const roofCost = 1500; // Примерная стоимость крыши
+            let baseCost = (area * 1000) + (floors * 5000) + foundationCost + wallCost + roofCost;
+            
+            const options = [];
+            let optionsCost = 0;
+            if (document.getElementById('balcony').checked) {
+                options.push('балкон');
+                optionsCost += 2000;
+            }
+            if (document.getElementById('terrace').checked) {
+                options.push('терраса');
+                optionsCost += 3000;
+            }
+            if (document.getElementById('garage').checked) {
+                options.push('гараж');
+                optionsCost += 4000;
+            }
+            baseCost += optionsCost;
+
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <h2>Итоговая стоимость:</h2>
+                <p>Общая стоимость: ${baseCost} руб.</p>
+                <h3>Разбивка по статьям расходов:</h3>
+                <ul>
+                    <li>Стоимость по площади: ${area * 1000} руб.</li>
+                    <li>Стоимость по этажам: ${floors * 5000} руб.</li>
+                    <li>Стоимость фундамента: ${foundationCost} руб.</li>
+                    <li>Стоимость стен: ${wallCost} руб.</li>
+                    <li>Стоимость крыши: ${roofCost} руб.</li>
+                    <li>Дополнительные опции: ${optionsCost} руб. (${options.join(', ')})</li>
+                </ul>
+            `;
+            resultDiv.classList.add('show');
+
+         
+            document.getElementById('email-form').style.display = 'block';
+        });
+
+        document.getElementById('email-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const resultText = document.getElementById('result').innerHTML;
+
+           
+            alert(`Расчет отправлен на ${email}`);
+        });
+    </script>
+</body>
+</html>
+
